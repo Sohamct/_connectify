@@ -11,61 +11,61 @@ namespace _connectify
 {
 
 
-    public partial class Home
+    public partial class ViewMyPost
     {
 
         /// <summary>
-        /// formHome control.
+        /// form1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlForm formHome;
+        protected global::System.Web.UI.HtmlControls.HtmlForm form1;
 
         /// <summary>
-        /// lnkMyPost1 control.
+        /// lnkHome control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink lnkMyPost1;
+        protected global::System.Web.UI.WebControls.HyperLink lnkHome;
 
         /// <summary>
-        /// lnkAddPost1 control.
+        /// lnkMyPost control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink lnkAddPost1;
+        protected global::System.Web.UI.WebControls.HyperLink lnkMyPost;
 
         /// <summary>
-        /// lnkFolks1 control.
+        /// lnkAddPost control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink lnkFolks1;
+        protected global::System.Web.UI.WebControls.HyperLink lnkAddPost;
 
         /// <summary>
-        /// btnLogout1 control.
+        /// btnLogout control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnLogout1;
+        protected global::System.Web.UI.WebControls.Button btnLogout;
 
         /// <summary>
-        /// rptPosts1 control.
+        /// rptPosts control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptPosts1;
+        protected global::System.Web.UI.WebControls.Repeater rptPosts;
     }
 }

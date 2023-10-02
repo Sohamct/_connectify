@@ -1,0 +1,83 @@
+﻿.post-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin: 10px;
+    padding: 10px;
+    width: calc(22% - 20px); /* 25% is one-quarter of the container, and 20px is for margins */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.card-body img {
+    max-width: 100%;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.card-body p {
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #555;
+}
+
+/* Default styles for buttons */
+.btn-like, .btn-dislike, .btn-delete {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    color: blue; /* Text color for default state */
+    background-color: #f0f0f0; /* Background color for default state */
+}
+
+    /* Hover styles for buttons */
+    .btn-like:hover, .btn-dislike:hover, .btn-delete:hover {
+        background-color: #eee;
+        color: #333; /* Text color on hover */
+    }
+
+/* Liked state for the "Like" button */
+.btn-like-liked {
+    background-color: #4CAF50; /* Green background color */
+    color: #fff; /* White text color */
+    /* Add any other styles you want for the liked state */
+}
+
+/* Disliked state for the "Dislike" button */
+.btn-dislike-disliked {
+    background-color: #FF5733; /* Red background color */
+    color: #fff; /* White text color */
+    /* Add any other styles you want for the disliked state */
+}
+
+/* Additional styling for the "Delete" button */
+.btn-delete {
+    background-color: #ff3333; /* Red background color */
+    color: #fff; /* White text color */
+    /* Add any other styles you want for the "Delete" button */
+}
+
+

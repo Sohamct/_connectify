@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.SqlClient;
 using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Reflection;
+using static _connectify.ViewMyPost;
 
 namespace _connectify
 {
-    public partial class Home : System.Web.UI.Page
+    public partial class ViewMyPost : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -34,8 +35,8 @@ namespace _connectify
                     {
                         post.IsDisliked = disLikedPostIds.Contains(post.Id);
                     }
-                    rptPosts1.DataSource = posts;
-                    rptPosts1.DataBind();
+                    rptPosts.DataSource = posts;
+                    rptPosts.DataBind();
                 }
             }
         }
@@ -105,13 +106,8 @@ namespace _connectify
 
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["userConnection"].ConnectionString))
             {
-                /*string query = "SELECT p.Id, p.PostImage, p.Title, p.Description, p.Date, u.UserName " +
-                               "FROM [Post] as p " +
-                               "INNER JOIN [User] as u ON p.UserId IN " +
-                               "(SELECT FollowerId FROM Follower WHERE followingId = @UserID AND status = 1)";
-                */
                 string query = "SELECT P.Id, P.Title, P.Description, P.Date, P.PostImage, U.UserName " +
-                      "FROM [Post] AS P INNER JOIN [User] AS U ON P.UserId = U.Id WHERE P.UserId = @UserId"; ;
+                       "FROM [Post] AS P INNER JOIN [User] AS U ON P.UserId = U.Id WHERE P.UserId = @UserId"; ;
                 SqlCommand cmd = new SqlCommand(query, con);
                 cmd.Parameters.AddWithValue("@UserId", userId);
 
@@ -136,7 +132,6 @@ namespace _connectify
 
             return posts;
         }
-
 
         protected bool isAlready(int pId, int uId, int like, int dislike)
         {

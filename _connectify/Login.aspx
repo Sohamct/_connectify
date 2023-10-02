@@ -1,9 +1,10 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="LoginPage.aspx.cs" Inherits="_connectify.Login" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="_connectify.Login" %>
 
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
+    <link rel="stylesheet" type="text/css" href="Styles/LoginStyle.css"/>
     <title>Login Page</title>
 </head>
 <body>
@@ -26,7 +27,7 @@ ErrorMessage="Password is required"></asp:RequiredFieldValidator>
         </div>
             </div>
             <div>
-                <asp:Button ID="btnLogin" runat="server" Text="Login" OnClick="btnLogin_Click" />
+                <asp:Button type="submit" class="login-button" ID="btnLogin" runat="server" Text="Login" OnClick="btnLogin_Click" />
             </div>
         
     </form>

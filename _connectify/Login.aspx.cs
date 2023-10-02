@@ -16,7 +16,7 @@ namespace _connectify
         {
             if (Session["greet"] != null && (bool) Session["greet"])
             {
-                Response.Write("You have successfully registered");
+                //Response.Write("You have successfully registered");
             }
 
         }

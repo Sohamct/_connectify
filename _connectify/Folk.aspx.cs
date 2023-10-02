@@ -52,9 +52,18 @@ namespace _connectify
                 cmd.Parameters.AddWithValue("@CurrentUserId", Convert.ToInt32(Session["UserId"])); // This is the current user's ID
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
-                da.Fill(dt);
-                GridViewUsers.DataSource = dt;
-                GridViewUsers.DataBind();
+                try
+                {
+                    da.Fill(dt);
+                    GridViewUsers.DataSource = dt;
+                    GridViewUsers.DataBind();
+                }
+                catch (Exception ex)
+                {
+                    // Log or display the exception message for debugging
+                    Response.Write("Error: " + ex.Message);
+                }
+                
             }
         }
 
