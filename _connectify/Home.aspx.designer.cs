@@ -51,13 +51,13 @@ namespace _connectify
         protected global::System.Web.UI.WebControls.HyperLink lnkFolks1;
 
         /// <summary>
-        /// btnLogout1 control.
+        /// logout_button control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnLogout1;
+        protected global::System.Web.UI.WebControls.Button logout_button;
 
         /// <summary>
         /// rptPosts1 control.

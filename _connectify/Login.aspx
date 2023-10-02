@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="_connectify.Login" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="_connectify.Login" ContentType="text/html" ResponseEncoding="utf-8"%>
 
 <!DOCTYPE html>
 
@@ -13,7 +13,6 @@
             <h1>Login</h1>
             <div>
                 
-
                 <label>Username: </label>
                 <asp:TextBox ID="txtUserName" runat="server"></asp:TextBox>
                 <asp:RequiredFieldValidator ID="rfvUserName" ForeColor="#CC0000" runat="server" ControlToValidate="txtUserName"

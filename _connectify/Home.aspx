@@ -21,7 +21,7 @@
             <asp:HyperLink ID="lnkMyPost1" runat="server" NavigateUrl="~/ViewMyPost.aspx" Text="My Post"></asp:HyperLink>
             <asp:HyperLink ID="lnkAddPost1" runat="server" NavigateUrl="~/NewPost.aspx" Text="Add New Post"></asp:HyperLink>
             <asp:HyperLink ID="lnkFolks1" runat="server" NavigateUrl="~/Folk.aspx" Text="Folks"></asp:HyperLink>
-            <asp:Button ID="btnLogout1" runat="server" Text="Logout" OnClick="btnLogout_Click" CssClass="logout-button" />
+            <asp:Button ID="logout_button" runat="server" Text="Logout" OnClick="btnLogout_Click" CssClass="logout-button" />
             
         </div>
 
@@ -33,7 +33,7 @@
                             <h2>Title: <%# Eval("Title") %></h2>
                         </div>
                         <div class="card-body">
-                            <asp:Image ID="imgPost1" Height="250" Width="200" runat="server" ImageUrl='<%# "data:image/jpeg;base64," + Convert.ToBase64String((byte[])Eval("PostImage")) %>' />
+                            <asp:Image ID="imgPost1" Height="240" Width="220" runat="server" ImageUrl='<%# "data:image/jpeg;base64," + Convert.ToBase64String((byte[])Eval("PostImage")) %>' />
                             <p>By : <%# Eval("UserName") %></p>
                             <p>Description: <%# Eval("Description") %></p>
                             <p>Date: <%# Eval("Date", "{0:MM/dd/yyyy}") %></p>
@@ -43,7 +43,7 @@
                             <asp:Button ID="btnDislike1" runat="server" Text="Dislike" CssClass='<%#((bool)Eval("IsDisliked")) ? "btn-dislike-disliked": "btn-dislike" %>' CommandName="DisLike" CommandArgument='<%# Eval("Id") %>' />
                             <asp:Button ID="btnLikedBy1" runat="server" Text="Liked By" CssClass="btn-like" CommandName="LikedBy" CommandArgument='<%# Eval("Id") %>' />
                             <asp:Button ID="btnDislikedBy1" runat="server" Text="Disliked By" CssClass="btn-dislike" CommandName="DislikedBy" CommandArgument='<%# Eval("Id") %>' />
-                            <asp:Button ID="btnDelete1" runat="server" Text="Delete" CssClass="btn-delete" CommandName="DeletePost" CommandArgument='<%# Eval("Id") %>' />
+                            
 
                         </div>
                     </div>

@@ -5,6 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <link rel="stylesheet" type="text/css" href="Styles/style2.css"/>
+    <link rel="stylesheet" type="text/css" href="Styles/FolksStyle.css"> 
     <title>All Folks</title>
 </head>
 <body>
@@ -13,7 +14,7 @@
     <asp:HyperLink ID="lnkHome" runat="server" NavigateUrl="~/Home.aspx" Text="Home"></asp:HyperLink>
     <asp:HyperLink ID="lnkMyPost" runat="server" NavigateUrl="~/ViewMyPost.aspx" Text="My Post"></asp:HyperLink>
     <asp:HyperLink ID="lnkAddPost" runat="server" NavigateUrl="~/NewPost.aspx" Text="Add New Post"></asp:HyperLink>
-    <asp:Button ID="btnLogout" runat="server" Text="Logout" OnClick="btnLogout_Click" CssClass="logout-button" />
+    <asp:Button ID="logout_button" runat="server" Text="Logout" OnClick="btnLogout_Click" CssClass="logout-button" />
     
 </div>
         <div class="gridview-container">
@@ -44,7 +45,7 @@
 
 
 
-        <div>
+        <div class="gridview-container">
             <h2>Users Following you but you don't</h2>
             <asp:GridView ID="GridViewFollowers" runat="server" AutoGenerateColumns="false" OnRowCommand="GridViewFollowers_RowCommand">
                 <Columns>
@@ -77,7 +78,7 @@
 
 
 
-                <div>
+                <div class="gridview-container">
             <h2>Users Following and you have requested</h2>
             <asp:GridView ID="GridViewFollowerAndRequested" runat="server" AutoGenerateColumns="false" OnRowCommand="GridViewFollowers_RowCommand">
                 <Columns>
@@ -111,7 +112,7 @@
 
 
 
-        <div>
+        <div class="gridview-container">
     <h2>Your Followers and Followings</h2>
     <asp:GridView ID="GridViewFollowers2" runat="server" AutoGenerateColumns="false" OnRowCommand="GridViewFollowers_RowCommand">
         <Columns>
@@ -141,7 +142,7 @@
 
 
 
-                <div>
+                <div class="gridview-container">
     <h2>You follow them but they don't</h2>
     <asp:GridView ID="GridViewOnlyFollowing" runat="server" AutoGenerateColumns="false" OnRowCommand="GridViewFollowers_RowCommand">
         <Columns>
@@ -171,7 +172,7 @@
 
 
 
-                <div>
+                <div class="gridview-container">
     <h2>You Have Requests from </h2>
     <asp:GridView ID="GridViewInComingRequests" runat="server" AutoGenerateColumns="false" OnRowCommand="GridViewFollowers_RowCommand">
         <Columns>
@@ -201,7 +202,7 @@
 
 
 
-                <div>
+                <div class="gridview-container">
     <h2>You have requested to</h2>
     <asp:GridView ID="GridViewOutGoingRequests" runat="server" AutoGenerateColumns="false" OnRowCommand="GridViewFollowers_RowCommand">
         <Columns>

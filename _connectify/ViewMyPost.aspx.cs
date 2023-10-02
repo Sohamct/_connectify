@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -20,25 +21,35 @@ namespace _connectify
             {
                 if (Session["UserId"] != null)
                 {
-                    int userId = Convert.ToInt32(Session["UserId"]);
-                    List<Post> posts = GetPostsByUserId(userId);
-                    List<int> likedPostIds = GetLikedPostIds(userId);
-
-                    // Update liked status in each post
-                    foreach (var post in posts)
-                    {
-                        post.IsLiked = likedPostIds.Contains(post.Id);
-                    }
-
-                    List<int> disLikedPostIds = GetDisLikedPostIds(userId);
-                    foreach (var post in posts)
-                    {
-                        post.IsDisliked = disLikedPostIds.Contains(post.Id);
-                    }
-                    rptPosts.DataSource = posts;
-                    rptPosts.DataBind();
+                    initialize();
+                }
+                else
+                {
+                    Response.Redirect("~Login.aspx");
                 }
             }
+
+        }
+
+        protected void initialize()
+        {
+            int userId = Convert.ToInt32(Session["UserId"]);
+            List<Post> posts = GetPostsByUserId(userId);
+            List<int> likedPostIds = GetLikedPostIds(userId);
+
+            // Update liked status in each post
+            foreach (var post in posts)
+            {
+                post.IsLiked = likedPostIds.Contains(post.Id);
+            }
+
+            List<int> disLikedPostIds = GetDisLikedPostIds(userId);
+            foreach (var post in posts)
+            {
+                post.IsDisliked = disLikedPostIds.Contains(post.Id);
+            }
+            rptPosts.DataSource = posts;
+            rptPosts.DataBind();
         }
 
         protected void btnLogout_Click(object sender, EventArgs e)
@@ -199,9 +210,9 @@ namespace _connectify
         {
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["userConnection"].ConnectionString))
             {
-                string insertQuery = "DELETE FROM [Like] WHERE UserId=@UserId and PostId=@PostId and [Like]=@Like and DisLike=@DisLike";
+                string deleteQuery = "DELETE FROM [Like] WHERE UserId=@UserId and PostId=@PostId and [Like]=@Like and DisLike=@DisLike";
 
-                SqlCommand cmd = new SqlCommand(insertQuery, con);
+                SqlCommand cmd = new SqlCommand(deleteQuery, con);
                 cmd.Parameters.AddWithValue("@PostId", pId);
                 cmd.Parameters.AddWithValue("@UserId", uId);
                 cmd.Parameters.AddWithValue("@Like", like);
@@ -212,7 +223,50 @@ namespace _connectify
             }
         }
 
-        protected List<string> GetLikedUsers(int postId)
+
+        protected void deletePost(int pId)
+        {
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["userConnection"].ConnectionString))
+            {
+                con.Open();  // Open the connection here
+
+                string deleteLikesQuery = "DELETE FROM [Like] WHERE PostId=@PostId";
+                SqlCommand cmdLikes = new SqlCommand(deleteLikesQuery, con);
+                cmdLikes.Parameters.AddWithValue("@PostId", pId);
+
+                try
+                {
+                    cmdLikes.ExecuteNonQuery(); // Delete likes first
+                }
+                catch (Exception ex)
+                {
+                    Response.Write(ex.ToString());
+                    con.Close();
+                    return; // Return early if there's an error
+                }
+
+                string deletePostQuery = "DELETE FROM [Post] WHERE Id=@PostId";
+                SqlCommand cmdPost = new SqlCommand(deletePostQuery, con);
+                cmdPost.Parameters.AddWithValue("@PostId", pId);
+
+                try
+                {
+                    cmdPost.ExecuteNonQuery(); // Delete post
+                }
+                catch (Exception ex)
+                {
+                    Response.Write(ex.ToString());
+                }
+                finally
+                {
+                    con.Close(); // Close the connection in finally block to ensure it's always closed
+                }
+            }
+            initialize();
+        }
+
+
+        protected List<string> GetLikedUsers(int postId, int like)
         {
             List<string> likedUsers = new List<string>();
 
@@ -221,11 +275,11 @@ namespace _connectify
                 string query = "SELECT U.UserName " +
                                "FROM [User] U " +
                                "INNER JOIN [Like] L ON U.Id = L.UserId " +
-                               "WHERE L.PostId = @PostId AND L.[Like] = 1";
+                               "WHERE L.PostId = @PostId AND L.[Like] = @Like";
 
                 SqlCommand cmd = new SqlCommand(query, con);
                 cmd.Parameters.AddWithValue("@PostId", postId);
-
+                cmd.Parameters.AddWithValue("@Like", like);
                 con.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -246,47 +300,85 @@ namespace _connectify
         {
             if (e.CommandName == "Like")
             {
-                int PostId = Convert.ToInt32(e.CommandArgument);
-                int UserId = Convert.ToInt32(Session["UserId"]);
+                try
+                {
+                    //ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Your message goes here.');", true);
 
-                if (isAlready(PostId, UserId, 0, 1))
-                {
-                    update(PostId, UserId, 1, 0);
+                    int PostId = Convert.ToInt32(e.CommandArgument);
+                    int UserId = Convert.ToInt32(Session["UserId"]);
+                    //Response.Write("psotid: " + PostId + " userid " + UserId);
+                    if (isAlready(PostId, UserId, 0, 1))
+                    {
+                        update(PostId, UserId, 1, 0);
+                    }
+                    else if (isAlready(PostId, UserId, 1, 0))
+                    {
+                        remove(PostId, UserId, 1, 0);
+                    }
+                    else
+                    {
+                        insert(PostId, UserId, 1, 0);
+                    }
+                    initialize();
+                    //Response.Write("Sending the reponse to client");
+                    //ClientScript.RegisterStartupScript(this.GetType(), "updateButtonCss", $"updateButtonCss({PostId}, true, false);", true);
                 }
-                else if (isAlready(PostId, UserId, 1, 0))
+                catch (Exception ex)
                 {
-                    remove(PostId, UserId, 1, 0);
-                }
-                else
-                {
-                    insert(PostId, UserId, 1, 0);
+                    Response.Write(ex.ToString());
                 }
             }
             else if (e.CommandName == "DisLike")
             {
-                int PostId = Convert.ToInt32(e.CommandArgument);
-                int UserId = Convert.ToInt32(Session["UserId"]);
+                try
+                {
+                    //ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Your message goes here.');", true);
 
-                if (isAlready(PostId, UserId, 1, 0))
-                {
-                    update(PostId, UserId, 0, 1);
+                    int PostId = Convert.ToInt32(e.CommandArgument);
+                    int UserId = Convert.ToInt32(Session["UserId"]);
+                    //Response.Write("psotid: " + PostId + " userid " + UserId);
+                    if (isAlready(PostId, UserId, 1, 0))
+                    {
+                        update(PostId, UserId, 0, 1);
+                    }
+                    else if (isAlready(PostId, UserId, 0, 1))
+                    {
+                        remove(PostId, UserId, 0, 1);
+                    }
+                    else
+                    {
+                        insert(PostId, UserId, 0, 1);
+                    }
+                    initialize();
+                    //Response.Write("Sending the reponse to client");
+                    //ClientScript.RegisterStartupScript(this.GetType(), "updateButtonCss", $"updateButtonCss({PostId}, false, true);", true);
                 }
-                else if (isAlready(PostId, UserId, 0, 1))
+                catch (Exception ex)
                 {
-                    remove(PostId, UserId, 0, 1);
-                }
-                else
-                {
-                    insert(PostId, UserId, 0, 1);
+                    Response.Write(ex.ToString());
                 }
             }
             else if (e.CommandName == "LikedBy")
             {
-                List<string> likedUsers = GetLikedUsers(Convert.ToInt32(e.CommandArgument));
+                List<string> likedUsers = GetLikedUsers(Convert.ToInt32(e.CommandArgument), 1);
 
 
                 string message = "Liked by: " + string.Join(", ", likedUsers);
                 ClientScript.RegisterStartupScript(this.GetType(), "likedUsersAlert", "alert('" + message + "');", true);
+            }
+            else if (e.CommandName == "DisLikedBy")
+            {
+                List<string> disLikedUsers = GetLikedUsers(Convert.ToInt32(e.CommandArgument), 0);
+
+
+                string message = "Liked by: " + string.Join(", ", disLikedUsers);
+                ClientScript.RegisterStartupScript(this.GetType(), "likedUsersAlert", "alert('" + message + "');", true);
+            }
+            else if(e.CommandName == "DeletePost")
+            {
+                int postId = Convert.ToInt32(e.CommandArgument.ToString());
+                deletePost(postId);
+                
             }
         }
 

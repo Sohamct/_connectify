@@ -190,10 +190,11 @@
     <Content Include="Scripts\WebForms\WebParts.js" />
     <Content Include="Scripts\WebForms\WebUIValidation.js" />
     <Content Include="Site.Master" />
+    <Content Include="Styles\FolksStyle.css" />
     <Content Include="Styles\LoginStyle.css" />
     <Content Include="Styles\PostStyle.css" />
     <Content Include="Styles\RegistrationStyle.css" />
-    <Content Include="Styles\style.css" />
+    <Content Include="Styles\style1.css" />
     <Content Include="Styles\style2.css" />
     <Content Include="ViewMyPost.aspx" />
     <Content Include="ViewSwitcher.ascx" />
