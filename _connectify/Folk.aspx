@@ -1,11 +1,11 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Folk.aspx.cs" Inherits="_connectify.Folk" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Folk.aspx.cs" Inherits="_connectify.Folk" EnableViewStateMac="true"%>
 
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <link rel="stylesheet" type="text/css" href="Styles/style2.css"/>
-    <link rel="stylesheet" type="text/css" href="Styles/FolksStyle.css"> 
+    <link rel="stylesheet" type="text/css" href="Styles/FolksStyle.css" />
     <title>All Folks</title>
 </head>
 <body>
@@ -14,12 +14,12 @@
     <asp:HyperLink ID="lnkHome" runat="server" NavigateUrl="~/Home.aspx" Text="Home"></asp:HyperLink>
     <asp:HyperLink ID="lnkMyPost" runat="server" NavigateUrl="~/ViewMyPost.aspx" Text="My Post"></asp:HyperLink>
     <asp:HyperLink ID="lnkAddPost" runat="server" NavigateUrl="~/NewPost.aspx" Text="Add New Post"></asp:HyperLink>
-    <asp:Button ID="logout_button" runat="server" Text="Logout" OnClick="btnLogout_Click" CssClass="logout-button" />
+    <asp:Button ID="logout_button" runat="server" Text="Logout" OnClick="btnLogout_Click" CssClass="logout_button" />
     
 </div>
         <div class="gridview-container">
             <h2>Non Followers Non Followings</h2>
-            <asp:GridView ID="GridViewUsers" runat="server" AutoGenerateColumns="false" OnRowCommand="GridViewFollowers_RowCommand">
+            <asp:GridView ID="NonFollowersNonFollowings" runat="server" AutoGenerateColumns="false" OnRowCommand="GridViewFollowers_RowCommand">
                 <Columns>
                     <asp:TemplateField HeaderText="User Name">
                         <ItemTemplate>
@@ -35,7 +35,7 @@
                     </asp:TemplateField>
                     <asp:TemplateField>
                         <ItemTemplate>
-                            <asp:Button ID="btnFollow" runat="server" CommandName="Follow" CommandArgument='<%# Eval("Id") %>' Text="Follow" />
+                            <asp:Button ID="btnFollow" runat="server" CommandName="Follow" CssClass="followBtn" CommandArgument='<%# Eval("Id") %>' Text="Follow" />
                         </ItemTemplate>
                     </asp:TemplateField>
                 </Columns>
@@ -47,7 +47,7 @@
 
         <div class="gridview-container">
             <h2>Users Following you but you don't</h2>
-            <asp:GridView ID="GridViewFollowers" runat="server" AutoGenerateColumns="false" OnRowCommand="GridViewFollowers_RowCommand">
+            <asp:GridView ID="FollowingsNotFollowers" runat="server" AutoGenerateColumns="false" OnRowCommand="GridViewFollowers_RowCommand">
                 <Columns>
                     <asp:TemplateField HeaderText="User Name">
                         <ItemTemplate>
@@ -63,8 +63,8 @@
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="Actions">
                         <ItemTemplate>
-                            <asp:Button ID="btnRemove" runat="server" CommandName="Remove" Text="Remove" CommandArgument='<%# Eval("Id") %>' />
-                            <asp:Button ID="btnFollowBack" runat="server" CommandName="Follow" CommandArgument='<%# Eval("Id") %>' Text="Followback" />
+                            <asp:Button ID="btnRemove" runat="server" CommandName="Remove" Text="Remove" CssClass="removeBtn" CommandArgument='<%# Eval("Id") %>' />
+                            <asp:Button ID="btnFollowBack" runat="server" CommandName="Follow" CssClass="followbackBtn" CommandArgument='<%# Eval("Id") %>' Text="Followback" />
 
                         </ItemTemplate>
                     </asp:TemplateField>
@@ -80,7 +80,7 @@
 
                 <div class="gridview-container">
             <h2>Users Following and you have requested</h2>
-            <asp:GridView ID="GridViewFollowerAndRequested" runat="server" AutoGenerateColumns="false" OnRowCommand="GridViewFollowers_RowCommand">
+            <asp:GridView ID="FollowerAndRequested" runat="server" AutoGenerateColumns="false" OnRowCommand="GridViewFollowers_RowCommand">
                 <Columns>
                     <asp:TemplateField HeaderText="User Name">
                         <ItemTemplate>
@@ -89,15 +89,15 @@
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="Profile Photo">
                         <ItemTemplate>
-                            <asp:Image CssClass="profile-photo" ID="imgProfilePhoto" runat="server" 
+                            <asp:Image CssClass="profile-photo" ID="imgProfilePhoto" runat="server"
     ImageUrl='<%# Eval("ProfilePhoto") != DBNull.Value ? "data:image/jpeg;base64," + Convert.ToBase64String((byte[])Eval("ProfilePhoto")) : "" %>' />
 
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="Actions">
                         <ItemTemplate>
-                            <asp:Button ID="btnRemove" runat="server" CommandName="Remove" Text="Remove" CommandArgument='<%# Eval("Id") %>' />
-                            <asp:Button ID="btnCancel" runat="server" CommandName="UnFollow" CommandArgument='<%# Eval("Id") %>' Text="Cancel request" />
+                            <asp:Button ID="btnRemove" runat="server" CommandName="Remove" CssClass="removeBtn" Text="Remove" CommandArgument='<%# Eval("Id") %>' />
+                            <asp:Button ID="btnCancel" runat="server" CommandName="UnFollow" CssClass="cancelBtn" CommandArgument='<%# Eval("Id") %>' Text="Cancel request" />
 
                         </ItemTemplate>
                     </asp:TemplateField>
@@ -113,8 +113,8 @@
 
 
         <div class="gridview-container">
-    <h2>Your Followers and Followings</h2>
-    <asp:GridView ID="GridViewFollowers2" runat="server" AutoGenerateColumns="false" OnRowCommand="GridViewFollowers_RowCommand">
+    <h2>Followers And Followings</h2>
+    <asp:GridView ID="FollowersAndFollowings" runat="server" AutoGenerateColumns="false" OnRowCommand="GridViewFollowers_RowCommand">
         <Columns>
             <asp:TemplateField HeaderText="User Name">
                 <ItemTemplate>
@@ -144,7 +144,7 @@
 
                 <div class="gridview-container">
     <h2>You follow them but they don't</h2>
-    <asp:GridView ID="GridViewOnlyFollowing" runat="server" AutoGenerateColumns="false" OnRowCommand="GridViewFollowers_RowCommand">
+    <asp:GridView ID="FollowingsAndNotFollowers" runat="server" AutoGenerateColumns="false" OnRowCommand="GridViewFollowers_RowCommand">
         <Columns>
             <asp:TemplateField HeaderText="User Name">
                 <ItemTemplate>
@@ -174,7 +174,7 @@
 
                 <div class="gridview-container">
     <h2>You Have Requests from </h2>
-    <asp:GridView ID="GridViewInComingRequests" runat="server" AutoGenerateColumns="false" OnRowCommand="GridViewFollowers_RowCommand">
+    <asp:GridView ID="OnlyRequestesFrom" runat="server" AutoGenerateColumns="false" OnRowCommand="GridViewFollowers_RowCommand">
         <Columns>
             <asp:TemplateField HeaderText="User Name">
                 <ItemTemplate>

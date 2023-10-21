@@ -5,7 +5,7 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    margin: 0;
+    margin: 50px auto;
 }
 
 form {
@@ -56,5 +56,39 @@ button[type="submit"] {
 }
 
     button[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+
+
+.signup-button {
+    margin: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+    .signup-button:hover {
+        background-color: #0056b3;
+    }
+
+
+.login-button {
+    margin: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+    .login-button:hover {
         background-color: #0056b3;
     }

@@ -1,4 +1,24 @@
-﻿.post-container {
+﻿
+
+.profile-container {
+    display: flex; 
+    align-items: center;
+}
+
+.profile-image {
+    margin-right: 20px; 
+}
+
+.username-label {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Add any additional styles you want here */
+
+.post-container {
+    
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
@@ -9,7 +29,7 @@
     border-radius: 8px;
     margin: 10px;
     padding: 10px;
-    width: calc(22% - 20px); /* 25% is one-quarter of the container, and 20px is for margins */
+    width: calc(22% - 20px); 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     background-color: #fff;
 }
@@ -42,40 +62,49 @@
     color: #555;
 }
 
-/* Default styles for buttons */
 .btn-like, .btn-dislike, .btn-delete {
     padding: 5px 10px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
-    color: blue; /* Text color for default state */
-    background-color: #f0f0f0; /* Background color for default state */
+    color: blue;
+    background-color: #f0f0f0;
+    font-size: 14px;
 }
 
-    /* Hover styles for buttons */
-    .btn-like:hover, .btn-dislike:hover, .btn-delete:hover {
-        background-color: #eee;
-        color: #333; /* Text color on hover */
-    }
+.btn-like-liked, .btn-dislike-disliked {
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
 
-/* Liked state for the "Like" button */
 .btn-like-liked {
-    background-color: #4CAF50; /* Green background color */
-    color: #fff; /* White text color */
-    /* Add any other styles you want for the liked state */
+    background-color: #4CAF50;
+    color: #fff;
 }
 
-/* Disliked state for the "Dislike" button */
 .btn-dislike-disliked {
-    background-color: #FF5733; /* Red background color */
-    color: #fff; /* White text color */
-    /* Add any other styles you want for the disliked state */
+    background-color: #FF5733;
+    color: #fff;
 }
 
-/* Additional styling for the "Delete" button */
+.btn-like:hover, .btn-dislike:hover, .btn-delete:hover {
+    background-color: #eee;
+    color: #333;
+}
+
 .btn-delete {
-    background-color: #ff3333; /* Red background color */
-    color: #fff; /* White text color */
-    /* Add any other styles you want for the "Delete" button */
+    background-color: #ff3333;
+    color: #fff;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px; /* Increase font size */
+}
+.username-label {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
 }
