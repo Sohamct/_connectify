@@ -20,6 +20,10 @@ namespace _connectify
             }
 
         }
+        protected void btnSignup_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Registration.aspx");
+        }
         protected void btnLogin_Click(object sender, EventArgs e)
         {
             string username = txtUserName.Text;
@@ -48,7 +52,7 @@ namespace _connectify
                             if (password == dbPassword)
                             {
                                 // Authentication successful, redirect to a welcome page
-                                Response.Write("User is valid");
+                                //Response.Write("User is valid");
                                 Session["UserName"] = username;
                                 Session["UserId"] = userId;
                                 Response.Redirect("Home.aspx");

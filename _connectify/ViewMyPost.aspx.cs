@@ -15,27 +15,67 @@ namespace _connectify
 {
     public partial class ViewMyPost : System.Web.UI.Page
     {
+        
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
                 if (Session["UserId"] != null)
                 {
-                    initialize();
+                    int userId = Convert.ToInt32(Session["UserId"]);
+
+                    string username = Session["UserName"].ToString();
+                    lblUserName.Text = "Welcome, " + username;
+
+                    byte[] profileImage = GetProfileImageById(userId);
+                    if (profileImage != null)
+                    {
+                        string base64String = Convert.ToBase64String(profileImage);
+                        imgProfile.ImageUrl = "data:image/jpeg;base64," + base64String;
+                    }
+
+                    List<Post> posts = GetPostsByUserId(userId);
+                    initializeLikeDislike(posts);
                 }
                 else
                 {
-                    Response.Redirect("~Login.aspx");
+                    Response.Redirect("Login.aspx");
+                }
+            }
+        }
+
+
+        private byte[] GetProfileImageById(int userId)
+        {
+            byte[] profileImage = null;
+
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["userConnection"].ConnectionString))
+            {
+                string query = "SELECT ProfilePhoto FROM [User] WHERE Id = @UserId";
+
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@UserId", userId);
+
+                con.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    if (reader["ProfilePhoto"] != DBNull.Value)
+                    {
+                        profileImage = (byte[])reader["ProfilePhoto"];
+                    }
                 }
             }
 
+            return profileImage;
         }
 
-        protected void initialize()
+
+        protected void initializeLikeDislike(List<Post> posts)
         {
             int userId = Convert.ToInt32(Session["UserId"]);
-            List<Post> posts = GetPostsByUserId(userId);
-            List<int> likedPostIds = GetLikedPostIds(userId);
+            List<int> likedPostIds = GetLikedPostIds(userId, 1);
 
             // Update liked status in each post
             foreach (var post in posts)
@@ -43,7 +83,7 @@ namespace _connectify
                 post.IsLiked = likedPostIds.Contains(post.Id);
             }
 
-            List<int> disLikedPostIds = GetDisLikedPostIds(userId);
+            List<int> disLikedPostIds = GetLikedPostIds(userId, 0);
             foreach (var post in posts)
             {
                 post.IsDisliked = disLikedPostIds.Contains(post.Id);
@@ -61,40 +101,16 @@ namespace _connectify
 
 
 
-        protected List<int> GetLikedPostIds(int userId)
+        protected List<int> GetLikedPostIds(int userId, int like)
         {
             List<int> likedPostIds = new List<int>();
 
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["userConnection"].ConnectionString))
             {
-                string query = "SELECT PostId FROM [Like] WHERE UserId = @UserId AND [Like] = 1";
+                string query = "SELECT PostId FROM [Like] WHERE UserId = @UserId AND [Like] = @Like";
                 SqlCommand cmd = new SqlCommand(query, con);
                 cmd.Parameters.AddWithValue("@UserId", userId);
-
-                con.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    int postId = Convert.ToInt32(reader["PostId"]);
-                    likedPostIds.Add(postId);
-                }
-            }
-
-            return likedPostIds;
-        }
-
-
-
-        protected List<int> GetDisLikedPostIds(int userId)
-        {
-            List<int> likedPostIds = new List<int>();
-
-            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["userConnection"].ConnectionString))
-            {
-                string query = "SELECT PostId FROM [Like] WHERE UserId = @UserId AND [DisLike] = 1";
-                SqlCommand cmd = new SqlCommand(query, con);
-                cmd.Parameters.AddWithValue("@UserId", userId);
+                cmd.Parameters.AddWithValue("@Like", like);
 
                 con.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -224,6 +240,7 @@ namespace _connectify
         }
 
 
+
         protected void deletePost(int pId)
         {
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["userConnection"].ConnectionString))
@@ -262,7 +279,8 @@ namespace _connectify
                     con.Close(); // Close the connection in finally block to ensure it's always closed
                 }
             }
-            initialize();
+            int userId = Convert.ToInt32(Session["UserId"]);
+            GetPostsByUserId(userId);
         }
 
 
@@ -298,28 +316,31 @@ namespace _connectify
 
         protected void rptPosts_ItemCommand(object sender, RepeaterCommandEventArgs e)
         {
+            
             if (e.CommandName == "Like")
             {
+                int userId = Convert.ToInt32(Session["UserId"]);
+                List<Post> posts = GetPostsByUserId(userId);
                 try
                 {
                     //ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Your message goes here.');", true);
-
+                    
                     int PostId = Convert.ToInt32(e.CommandArgument);
-                    int UserId = Convert.ToInt32(Session["UserId"]);
                     //Response.Write("psotid: " + PostId + " userid " + UserId);
-                    if (isAlready(PostId, UserId, 0, 1))
+                    if (isAlready(PostId, userId, 0, 1))
                     {
-                        update(PostId, UserId, 1, 0);
+                        update(PostId, userId, 1, 0);
                     }
-                    else if (isAlready(PostId, UserId, 1, 0))
+                    else if (isAlready(PostId, userId, 1, 0))
                     {
-                        remove(PostId, UserId, 1, 0);
+                        remove(PostId, userId, 1, 0);
                     }
                     else
                     {
-                        insert(PostId, UserId, 1, 0);
+                        insert(PostId, userId, 1, 0);
                     }
-                    initialize();
+                    
+                    initializeLikeDislike(posts);
                     //Response.Write("Sending the reponse to client");
                     //ClientScript.RegisterStartupScript(this.GetType(), "updateButtonCss", $"updateButtonCss({PostId}, true, false);", true);
                 }
@@ -330,26 +351,27 @@ namespace _connectify
             }
             else if (e.CommandName == "DisLike")
             {
+                int userId = Convert.ToInt32(Session["UserId"]);
+                List<Post> posts = GetPostsByUserId(userId);
                 try
                 {
                     //ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Your message goes here.');", true);
-
+                    
                     int PostId = Convert.ToInt32(e.CommandArgument);
-                    int UserId = Convert.ToInt32(Session["UserId"]);
                     //Response.Write("psotid: " + PostId + " userid " + UserId);
-                    if (isAlready(PostId, UserId, 1, 0))
+                    if (isAlready(PostId, userId, 1, 0))
                     {
-                        update(PostId, UserId, 0, 1);
+                        update(PostId, userId, 0, 1);
                     }
-                    else if (isAlready(PostId, UserId, 0, 1))
+                    else if (isAlready(PostId, userId, 0, 1))
                     {
-                        remove(PostId, UserId, 0, 1);
+                        remove(PostId, userId, 0, 1);
                     }
                     else
                     {
-                        insert(PostId, UserId, 0, 1);
+                        insert(PostId, userId, 0, 1);
                     }
-                    initialize();
+                    initializeLikeDislike(posts);
                     //Response.Write("Sending the reponse to client");
                     //ClientScript.RegisterStartupScript(this.GetType(), "updateButtonCss", $"updateButtonCss({PostId}, false, true);", true);
                 }
@@ -360,25 +382,33 @@ namespace _connectify
             }
             else if (e.CommandName == "LikedBy")
             {
+                int userId = Convert.ToInt32(Session["UserId"]);
+                List<Post> posts = GetPostsByUserId(userId);
                 List<string> likedUsers = GetLikedUsers(Convert.ToInt32(e.CommandArgument), 1);
 
 
-                string message = "Liked by: " + string.Join(", ", likedUsers);
+                string message = "This post is liked by: " + string.Join(", ", likedUsers);
                 ClientScript.RegisterStartupScript(this.GetType(), "likedUsersAlert", "alert('" + message + "');", true);
             }
-            else if (e.CommandName == "DisLikedBy")
+            else if (e.CommandName == "DislikedBy")
             {
+                int userId = Convert.ToInt32(Session["UserId"]);
+                List<Post> posts = GetPostsByUserId(userId);
+
                 List<string> disLikedUsers = GetLikedUsers(Convert.ToInt32(e.CommandArgument), 0);
+                //Response.Write("Disliked By button clicked!");
 
-
-                string message = "Liked by: " + string.Join(", ", disLikedUsers);
-                ClientScript.RegisterStartupScript(this.GetType(), "likedUsersAlert", "alert('" + message + "');", true);
+                string message = "This post is disLiked by: " + string.Join(", ", disLikedUsers);
+                ClientScript.RegisterStartupScript(this.GetType(), "disLikedUsersAlert", "alert('" + message + "');", true);
             }
             else if(e.CommandName == "DeletePost")
             {
+                int userId = Convert.ToInt32(Session["UserId"]);
+
                 int postId = Convert.ToInt32(e.CommandArgument.ToString());
                 deletePost(postId);
-                
+                List<Post> posts = GetPostsByUserId(userId);
+                initializeLikeDislike(posts);
             }
         }
 
@@ -386,29 +416,27 @@ namespace _connectify
 
         protected void rptPosts_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
-            //Response.Write("comming " + e.Item.ItemType);
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
                 DataRowView rowView = e.Item.DataItem as DataRowView;
                 if (rowView != null)
                 {
                     int postId = Convert.ToInt32(DataBinder.Eval(rowView, "Id"));
-                    int userId = Convert.ToInt32(Session["UserId"]);
 
                     Button btnLike = (Button)e.Item.FindControl("btnLike");
                     Button btnDislike = (Button)e.Item.FindControl("btnDislike");
-
-                    // Check the flag or value to determine if the post has been liked or disliked
+                    int userId = Convert.ToInt32(Session["UserId"]);
+                    
                     bool isLiked = isAlready(postId, userId, 1, 0);
                     bool isDisliked = isAlready(postId, userId, 0, 1);
 
                     if (isLiked)
                     {
-                        btnLike.CssClass = "btn-like-liked"; // Apply a different CSS class for liked
+                        btnLike.CssClass = "btn-like-liked"; 
                     }
                     else if (isDisliked)
                     {
-                        btnDislike.CssClass = "btn-dislike-disliked"; // Apply a different CSS class for disliked
+                        btnDislike.CssClass = "btn-dislike-disliked";
                     }
                 }
             }

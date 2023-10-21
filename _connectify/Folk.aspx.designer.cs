@@ -60,58 +60,58 @@ namespace _connectify
         protected global::System.Web.UI.WebControls.Button logout_button;
 
         /// <summary>
-        /// GridViewUsers control.
+        /// NonFollowersNonFollowings control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView GridViewUsers;
+        protected global::System.Web.UI.WebControls.GridView NonFollowersNonFollowings;
 
         /// <summary>
-        /// GridViewFollowers control.
+        /// FollowingsNotFollowers control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView GridViewFollowers;
+        protected global::System.Web.UI.WebControls.GridView FollowingsNotFollowers;
 
         /// <summary>
-        /// GridViewFollowerAndRequested control.
+        /// FollowerAndRequested control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView GridViewFollowerAndRequested;
+        protected global::System.Web.UI.WebControls.GridView FollowerAndRequested;
 
         /// <summary>
-        /// GridViewFollowers2 control.
+        /// FollowersAndFollowings control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView GridViewFollowers2;
+        protected global::System.Web.UI.WebControls.GridView FollowersAndFollowings;
 
         /// <summary>
-        /// GridViewOnlyFollowing control.
+        /// FollowingsAndNotFollowers control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView GridViewOnlyFollowing;
+        protected global::System.Web.UI.WebControls.GridView FollowingsAndNotFollowers;
 
         /// <summary>
-        /// GridViewInComingRequests control.
+        /// OnlyRequestesFrom control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView GridViewInComingRequests;
+        protected global::System.Web.UI.WebControls.GridView OnlyRequestesFrom;
 
         /// <summary>
         /// GridViewOutGoingRequests control.

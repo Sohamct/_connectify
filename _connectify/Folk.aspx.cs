@@ -12,25 +12,24 @@ namespace _connectify
         
         protected void Page_Load(object sender, EventArgs e)
         {
-            
-            if (!IsPostBack)
+            if (!Page.IsPostBack)
             {
+
                 if (Session["UserId"] != null)
                 {
-                    BindGridView();
-                    BindGridViewFollowers();
-                    BindGridViewFollowers2();
+                    BindGridView_NonFollowersNonFollowings();
+                    BindGridView_FollowingsNotFollowers();
+                    BindGridView_FollowersAndFollowings();
                     BindGridViewOutGoingRequests();
-                    BindGridViewInComingRequests();
-                    BindGridViewFollowerAndRequested();
-                    BindGridViewOnlyFollowing();
+                    BindGridView_OnlyRequestesFrom();
+                    BindGridView_FollowerAndRequested();
+                    BindGridView_FollowingsAndNotFollowers();
                     //Response.Write(Session["UserId"]);
                 }
                 else
                 {
-                    Response.Redirect("~Login.aspx");
+                    Response.Redirect("Login.aspx");
                 }
-
             }
         }
         protected void btnLogout_Click(object sender, EventArgs e)
@@ -40,7 +39,7 @@ namespace _connectify
             Response.Redirect("~/Login.aspx");
         }
 
-        protected void BindGridView()
+        protected void BindGridView_NonFollowersNonFollowings()
         {
             string connectionString = ConfigurationManager.ConnectionStrings["userConnection"].ConnectionString;
             using (SqlConnection con = new SqlConnection(connectionString))
@@ -55,8 +54,8 @@ namespace _connectify
                 try
                 {
                     da.Fill(dt);
-                    GridViewUsers.DataSource = dt;
-                    GridViewUsers.DataBind();
+                    NonFollowersNonFollowings.DataSource = dt;
+                    NonFollowersNonFollowings.DataBind();
                 }
                 catch (Exception ex)
                 {
@@ -68,7 +67,7 @@ namespace _connectify
         }
 
 
-        protected void BindGridViewFollowers()
+        protected void BindGridView_FollowingsNotFollowers()
         {
             string connectionString = ConfigurationManager.ConnectionStrings["userConnection"].ConnectionString;
 
@@ -105,12 +104,12 @@ namespace _connectify
                 }
 
 
-                GridViewFollowers.DataSource = dt;
-                GridViewFollowers.DataBind();
+                FollowingsNotFollowers.DataSource = dt;
+                FollowingsNotFollowers.DataBind();
             }
         }
 
-        protected void BindGridViewFollowerAndRequested()
+        protected void BindGridView_FollowerAndRequested()
         {
             string connectionString = ConfigurationManager.ConnectionStrings["userConnection"].ConnectionString;
 
@@ -143,14 +142,14 @@ namespace _connectify
                     Response.Write("Error: " + ex.Message);
                 }
 
-                GridViewFollowerAndRequested.DataSource = dt;
-                GridViewFollowerAndRequested.DataBind();
+                FollowerAndRequested.DataSource = dt;
+                FollowerAndRequested.DataBind();
             }
         }
 
 
 
-        protected void BindGridViewFollowers2()
+        protected void BindGridView_FollowersAndFollowings()
         {
             string connectionString = ConfigurationManager.ConnectionStrings["userConnection"].ConnectionString;
 
@@ -176,13 +175,13 @@ namespace _connectify
                 }
 
 
-                GridViewFollowers2.DataSource = dt;
-                GridViewFollowers2.DataBind();
+                FollowersAndFollowings.DataSource = dt;
+                FollowersAndFollowings.DataBind();
             }
         }
 
 
-        protected void BindGridViewInComingRequests()
+        protected void BindGridView_OnlyRequestesFrom()
         {
             string connectionString = ConfigurationManager.ConnectionStrings["userConnection"].ConnectionString;
 
@@ -207,8 +206,8 @@ namespace _connectify
                 }
 
 
-                GridViewInComingRequests.DataSource = dt;
-                GridViewInComingRequests.DataBind();
+                OnlyRequestesFrom.DataSource = dt;
+                OnlyRequestesFrom.DataBind();
             }
         }
 
@@ -244,7 +243,7 @@ namespace _connectify
         }
 
 
-        protected void BindGridViewOnlyFollowing()
+        protected void BindGridView_FollowingsAndNotFollowers()
         {
             string connectionString = ConfigurationManager.ConnectionStrings["userConnection"].ConnectionString;
 
@@ -270,8 +269,8 @@ namespace _connectify
                 }
 
 
-                GridViewOnlyFollowing.DataSource = dt;
-                GridViewOnlyFollowing.DataBind();
+                FollowingsAndNotFollowers.DataSource = dt;
+                FollowingsAndNotFollowers.DataBind();
             }
         }
 
@@ -295,18 +294,18 @@ namespace _connectify
                         cmd.ExecuteNonQuery();
                     }
                 }
-                BindGridView();
-                BindGridViewFollowers();
-                BindGridViewFollowers2();
+                BindGridView_NonFollowersNonFollowings();
+                BindGridView_FollowingsNotFollowers();
+                BindGridView_FollowersAndFollowings();
                 BindGridViewOutGoingRequests();
-                BindGridViewInComingRequests();
-                BindGridViewFollowerAndRequested();
+                BindGridView_OnlyRequestesFrom();
+                BindGridView_FollowerAndRequested();
             }
 
             else if (e.CommandName == "Remove")
             {
                 // Logic for removing the follower
-                Response.Write(e.CommandArgument);
+                //Response.Write(e.CommandArgument);
                 int followerId = Convert.ToInt32(e.CommandArgument);
                 int followingId = Convert.ToInt32(Session["UserId"]);
 
@@ -321,14 +320,14 @@ namespace _connectify
                         cmd.ExecuteNonQuery();
                     }
                 }
-                BindGridView();
-                BindGridViewFollowers();
-                BindGridViewFollowers2();
+                BindGridView_NonFollowersNonFollowings();
+                BindGridView_FollowingsNotFollowers();
+                BindGridView_FollowersAndFollowings();
                 BindGridViewOutGoingRequests();
-                BindGridViewInComingRequests();
-                BindGridViewFollowerAndRequested();
+                BindGridView_OnlyRequestesFrom();
+                BindGridView_FollowerAndRequested();
             }
-            else if(e.CommandName == "UnFollow")
+            else if (e.CommandName == "UnFollow")
             {
                 int followerId = (int)Session["UserId"];
                 int followingId = Convert.ToInt32(e.CommandArgument);
@@ -344,14 +343,16 @@ namespace _connectify
                         cmd.ExecuteNonQuery();
                     }
                 }
-                BindGridView();
-                BindGridViewFollowers();
-                BindGridViewFollowers2();
+
+                BindGridView_NonFollowersNonFollowings();
+                BindGridView_FollowingsNotFollowers();
+                BindGridView_FollowersAndFollowings();
                 BindGridViewOutGoingRequests();
-                BindGridViewInComingRequests();
-                BindGridViewFollowerAndRequested();
-                BindGridViewOnlyFollowing();
+                BindGridView_OnlyRequestesFrom();
+                BindGridView_FollowerAndRequested();
+                BindGridView_FollowingsAndNotFollowers();
             }
+
 
             else if (e.CommandName == "Accept")
             {
@@ -370,13 +371,13 @@ namespace _connectify
                         cmd.ExecuteNonQuery();
                     }
                 }
-                BindGridView();
-                BindGridViewFollowers();
-                BindGridViewFollowers2();
+                BindGridView_NonFollowersNonFollowings();
+                BindGridView_FollowingsNotFollowers();
+                BindGridView_FollowersAndFollowings();
                 BindGridViewOutGoingRequests();
-                BindGridViewInComingRequests();
-                BindGridViewFollowerAndRequested();
-                BindGridViewOnlyFollowing();
+                BindGridView_OnlyRequestesFrom();
+                BindGridView_FollowerAndRequested();
+                BindGridView_FollowingsAndNotFollowers();
             }
 
 
@@ -396,12 +397,12 @@ namespace _connectify
                         cmd.ExecuteNonQuery();
                     }
                 }
-                BindGridView();
-                BindGridViewFollowers();
-                BindGridViewFollowers2();
+                BindGridView_NonFollowersNonFollowings();
+                BindGridView_FollowingsNotFollowers();
+                BindGridView_FollowersAndFollowings();
                 BindGridViewOutGoingRequests();
-                BindGridViewInComingRequests();
-                BindGridViewFollowerAndRequested();
+                BindGridView_OnlyRequestesFrom();
+                BindGridView_FollowerAndRequested();
             }
 
 
