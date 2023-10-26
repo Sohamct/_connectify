@@ -24,6 +24,15 @@
 
 #####  Delete Post  
   - User is able to delete own post
+
+#####  Like Post  
+  - User can like those post which is uploaded by the following users.
+
+#####  DisLike Post  
+  - User can dislike those post which is uploaded by the following users.
+
+#####  Show post-liked/disliked user
+  - User can see the list if user who has liked/disliked the post.
     
 ##### Read Post
   - Only own + following users post are visible. 
